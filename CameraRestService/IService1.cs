@@ -24,7 +24,13 @@ namespace CameraRestService
 
          [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "images/")]
+            UriTemplate = "images/{id}")]
+        Image GetImageById();
+
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
+           UriTemplate = "images/")]
         IList<Image> GetImages();
     }
 
