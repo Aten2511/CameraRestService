@@ -22,12 +22,11 @@ namespace CameraRestService
             UriTemplate = "images/")]
         int AddImage(Image img);
 
-         [OperationContract]
-        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "images/{id}")]
-        Image GetImageById();
+        // [OperationContract]
+        //[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
+        //    UriTemplate = "images/{id}")]
+        //Image GetImageById();
 
-        //Get Image by id
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
            UriTemplate = "images/")]
