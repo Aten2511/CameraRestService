@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Threading.Tasks;
 using CameraRestService.Model;
 
 namespace CameraRestService
@@ -20,9 +21,9 @@ namespace CameraRestService
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "images/")]
-        int AddImage(Image img);
+        Task<int> AddImage(Image img);
 
-         [OperationContract]
+        [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "images/")]
         IList<Image> GetImages();
