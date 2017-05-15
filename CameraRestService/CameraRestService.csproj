@@ -70,10 +70,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Service1.svc" />
-    <Content Include="TestImages\Skaermbillede 2017-05-09 kl. 11.38.03.png" />
-    <Content Include="TestImages\Skaermbillede 2017-05-09 kl. 11.38.17.png" />
-    <Content Include="TestImages\Skaermbillede 2017-05-09 kl. 11.38.23.png" />
-    <Content Include="TestImages\Skaermbillede 2017-05-09 kl. 11.38.28.png" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
