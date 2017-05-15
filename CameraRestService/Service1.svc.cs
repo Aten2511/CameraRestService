@@ -76,7 +76,7 @@ namespace CameraRestService
         {
             //testmethod
 
-            string outputString = img;
+            string outputString = input;
 
             return outputString;
 
