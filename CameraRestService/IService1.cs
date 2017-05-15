@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using CameraRestService.Model;
 
 namespace CameraRestService
@@ -16,12 +17,18 @@ namespace CameraRestService
     [ServiceContract]
     public interface IService1
     {
-        //Add image to database
+        ////Add image to database
+        //[OperationContract]
+        //[WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json,
+        //    ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
+        //    UriTemplate = "images/")]
+        //int AddImage(Image img);
+
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json,
-            ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "images/")]
-        Task<int> AddImage(Image img);
+    ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
+    UriTemplate = "images/")]
+        string AddImage(string input);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,

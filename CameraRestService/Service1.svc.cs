@@ -27,53 +27,59 @@ namespace CameraRestService
         private const string ConnString =
             "Server=tcp:norbi-server.database.windows.net,1433;Initial Catalog=3SemFinal-DB;Persist Security Info=False;User ID=shadowzone88;Password=Russel888988;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
 
-       public async Task<int> AddImage(Image img)
+        //public int AddImage(Image img)
+        //{
+        //    #region return data testcode
+
+        //    int dbRowsAffected = 0;
+
+        //    TODO test if upload was a success before storing in database
+        //    bool uploadToDbSuccess = false;
+
+        //    #endregion
+
+        //    //Uploads the data to Dropbox and writes the dropbox path
+        //    using (DropboxClient client = new DropboxClient(TokenString))
+        //    {
+
+        //        string returnString = Upload(client, DropboxFolder, img.FileName, img.Data).Result;
+        //        string remotePath = $"{DropboxFolder}/{img.FileName}";
+
+        //        //string variable for shared link url
+        //        string url = "";
+
+        //        //Tries to get a sharedlink (url as string)
+        //        //Fails if link has already been created
+        //        try
+        //        {
+        //            url = GetOrCreateSharedLink(client, remotePath).Result;
+        //            Console.WriteLine($"{returnString}, URL: {url}");
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            Console.WriteLine(e.Message);
+        //        }
+
+        //        //Creates object that holds the metadata that needs to be stored in the db
+        //        ImageInfo imgMeta = new ImageInfo(img.FileCreationDate, DropboxFolder, img.FileName, url);
+
+        //        //TODO store ImageInfo in db
+        //        dbRowsAffected = StoreDataInDb(imgMeta);
+        //    }
+
+        //    return dbRowsAffected;
+
+        //}
+
+
+        public string AddImage(string input)
         {
-            #region return data testcode
+            //testmethod
 
-            int dbRowsAffected = 0;
+            string outputString = img;
 
-            //TODO test if upload was a success before storing in database
-            bool uploadToDbSuccess = false;
+            return outputString;
 
-            #endregion
-
-            #region testcode for dummydata
-
-            #endregion
-            
-
-            //Uploads the data to Dropbox and writes the dropbox path
-            using (DropboxClient client = new DropboxClient(TokenString))
-            {
-
-                string returnString = await Upload(client, DropboxFolder, img.FileName, img.Data);
-                string remotePath = $"{DropboxFolder}/{img.FileName}";
-
-                //string variable for shared link url
-                string url = "";
-
-                //Tries to get a sharedlink (url as string)
-                //Fails if link has already been created
-                try
-                {
-                    url = await GetOrCreateSharedLink(client, remotePath);
-                    Console.WriteLine($"{returnString}, URL: {url}");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-
-                //Creates object that holds the metadata that needs to be stored in the db
-                ImageInfo imgMeta = new ImageInfo(img.FileCreationDate, DropboxFolder, img.FileName, url);
-
-                //TODO store ImageInfo in db
-                dbRowsAffected = StoreDataInDb(imgMeta);
-            }
-
-            return dbRowsAffected;
-            
         }
 
         /// <summary>
