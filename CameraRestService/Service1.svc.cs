@@ -172,32 +172,32 @@ namespace CameraRestService
             return img;
         }
 
-        public IList<Image> GetImages()
-        {
-            List<Image> result = new List<Image>();
+        //public IList<Image> GetImages()
+        //{
+        //    List<Image> result = new List<Image>();
 
-            using (SqlConnection databaseConnection = new SqlConnection(ConnString))
-            {
-                databaseConnection.Open();
+        //    using (SqlConnection databaseConnection = new SqlConnection(ConnString))
+        //    {
+        //        databaseConnection.Open();
 
-                using (
-                    SqlCommand getCommand =
-                        new SqlCommand("Select * from Images", databaseConnection))
-                {
-                    using (SqlDataReader reader = getCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                Image img1 = ReadImage(reader);
-                                result.Add(img1);
-                            }
-                        }
-                    }
-                }
-            }
-            return result;
-        }
+        //        using (
+        //            SqlCommand getCommand =
+        //                new SqlCommand("Select * from Images", databaseConnection))
+        //        {
+        //            using (SqlDataReader reader = getCommand.ExecuteReader())
+        //            {
+        //                if (reader.HasRows)
+        //                {
+        //                    while (reader.Read())
+        //                    {
+        //                        Image img1 = ReadImage(reader);
+        //                        result.Add(img1);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return result;
+        //}
     }
 }

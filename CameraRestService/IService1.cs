@@ -30,10 +30,10 @@ namespace CameraRestService
     UriTemplate = "images/")]
         string AddImage(string input);
 
-        [OperationContract]
-        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
-            UriTemplate = "images/")]
-        IList<Image> GetImages();
+        //[OperationContract]
+        //[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
+        //    UriTemplate = "images/")]
+        //IList<Image> GetImages();
     }
 
 
