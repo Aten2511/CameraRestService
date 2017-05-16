@@ -71,7 +71,11 @@ namespace CameraRestService
 
         //}
 
-
+        /// <summary>
+        /// Test method for Post request. Takes a string as input
+        /// </summary>
+        /// <param name="input">Text string</param>
+        /// <returns></returns>
         public string AddImage(string input)
         {
             //testmethod
@@ -101,7 +105,7 @@ namespace CameraRestService
                 return $"{folder}/{fileName}, {updated.Rev}";
             }
         }
-       
+
         /// <summary>
         /// Get or creates a shared link (url) to a Dropbox file
         /// </summary>
@@ -135,7 +139,7 @@ namespace CameraRestService
             }
             return url;
         }
-        
+
         /// <summary>
         /// Inserts imageInfo into the database
         /// </summary>
@@ -158,8 +162,8 @@ namespace CameraRestService
                 }
             }
         }
-        
-        
+
+
         private static Image ReadImage(IDataRecord reader)
         {
             DateTime date = reader.GetDateTime(1);
