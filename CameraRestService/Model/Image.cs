@@ -8,33 +8,40 @@ using System.Web.UI.WebControls;
 
 namespace CameraRestService.Model
 {
-    [DataContract]
+
     public class Image
     {
         private DateTime _fileCreationDate;
         private string _fileName;
-        private Byte[] _data;
+        //private Byte[] _data;
 
-        [DataMember]
         public string FileName
         {
             get { return _fileName; }
             set { _fileName = value; }
         }
-        [DataMember]
+
         public DateTime FileCreationDate
         {
             get { return _fileCreationDate; }
             set { _fileCreationDate = value; }
         }
 
-        [DataMember]
-        public Byte[] Data
+        //public Byte[] Data
+        //{
+        //    get { return _data; }
+        //    set { _data = value; }
+        //}
+
+        public Image(DateTime fileCreationDate, string fileName)
         {
-            get { return _data; }
-            set { _data = value; }
+            _fileCreationDate = fileCreationDate;
+            _fileName = fileName;
         }
 
+        public Image()
+        {
 
+        }
     }
 }
