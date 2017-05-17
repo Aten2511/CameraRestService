@@ -27,9 +27,6 @@ namespace CameraRestService
         private const string ConnString =
             "Server=tcp:norbi-server.database.windows.net,1433;Initial Catalog=3SemFinal-DB;Persist Security Info=False;User ID=shadowzone88;Password=Russel888988;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
 
-
-
-        
         public int AddImage(Image img)
         {
             #region return data testcode
@@ -41,34 +38,35 @@ namespace CameraRestService
 
             #endregion
 
-            ////Uploads the data to Dropbox and writes the dropbox path
-            //using (DropboxClient client = new DropboxClient(TokenString))
-            //{
 
-            //    string returnString = Upload(client, DropboxFolder, img.FileName, img.Data).Result;
-            //    string remotePath = $"{DropboxFolder}/{img.FileName}";
+            //Uploads the data to Dropbox and writes the dropbox path
+            using (DropboxClient client = new DropboxClient(TokenString))
+            {
 
-            //    //string variable for shared link url
-            //    string url = "";
+                string returnString = Upload(client, DropboxFolder, img.FileName, img.GetDataAsByteArray()).Result;
+                string remotePath = $"{DropboxFolder}/{img.FileName}";
 
-            //    //Tries to get a sharedlink (url as string)
-            //    //Fails if link has already been created
-            //    try
-            //    {
-            //        url = GetOrCreateSharedLink(client, remotePath).Result;
-            //        Console.WriteLine($"{returnString}, URL: {url}");
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Console.WriteLine(e.Message);
-            //    }
+                //string variable for shared link url
+                string url = "";
 
-            //    //Creates object that holds the metadata that needs to be stored in the db
-            //    ImageInfo imgMeta = new ImageInfo(img.FileCreationDate, DropboxFolder, img.FileName, url);
+                //Tries to get a sharedlink (url as string)
+                //Fails if link has already been created
+                try
+                {
+                    url = GetOrCreateSharedLink(client, remotePath).Result;
+                    Console.WriteLine($"{returnString}, URL: {url}");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
 
-            //    //TODO store ImageInfo in db
-            //    dbRowsAffected = StoreDataInDb(imgMeta);
-            //}
+                //Creates object that holds the metadata that needs to be stored in the db
+                ImageInfo imgMeta = new ImageInfo(img.FileCreationDate, DropboxFolder, img.FileName, url);
+
+                //TODO store ImageInfo in db
+                dbRowsAffected = StoreDataInDb(imgMeta);
+            }
 
             return dbRowsAffected;
 
@@ -156,7 +154,7 @@ namespace CameraRestService
 
                 using (
                     SqlCommand insertCommand =
-                        new SqlCommand("insert into Images (FileCreationDate,Link) values (@fileCreationDate, @sharedLink)", databaseConnection))
+                        new SqlCommand("insert into Images (DateTime,Link) values (@fileCreationDate, @sharedLink)", databaseConnection))
                 {
                     insertCommand.Parameters.AddWithValue("@fileCreationDate", imgMeta.FileCreationDate);
                     insertCommand.Parameters.AddWithValue("@sharedLink", imgMeta.SharedLink);

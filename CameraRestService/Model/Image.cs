@@ -13,7 +13,7 @@ namespace CameraRestService.Model
     {
         private DateTime _fileCreationDate;
         private string _fileName;
-        //private Byte[] _data;
+        private string _data;
 
         public string FileName
         {
@@ -27,21 +27,33 @@ namespace CameraRestService.Model
             set { _fileCreationDate = value; }
         }
 
-        //public Byte[] Data
-        //{
-        //    get { return _data; }
-        //    set { _data = value; }
-        //}
+        public string Data
+        {
+            get { return _data; }
+            set { _data = value; }
+        }
 
-        public Image(DateTime fileCreationDate, string fileName)
+        public Image(DateTime fileCreationDate, string fileName, string data)
         {
             _fileCreationDate = fileCreationDate;
             _fileName = fileName;
+            _data = data;
         }
 
         public Image()
         {
 
+        }
+
+
+        public Byte[] GetDataAsByteArray()
+        {
+            return Convert.FromBase64String(Data);
+        }
+
+        public void SetDataAsBase64String(Byte[] dataAsByteArray)
+        {
+            FileName = Convert.ToBase64String(dataAsByteArray);
         }
     }
 }
