@@ -26,11 +26,6 @@ namespace CameraRestService
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "strings/")]
         string AddString(string input);
 
-
-        //[OperationContract]
-        //[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
-        //    UriTemplate = "images/")]
-        //IList<Image> GetImages();
     }
 
 

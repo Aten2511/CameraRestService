@@ -165,44 +165,5 @@ namespace CameraRestService
         }
 
 
-        //private static Image ReadImage(IDataRecord reader)
-        //{
-        //    DateTime date = reader.GetDateTime(1);
-        //    string link = reader.GetString(2);
-        //    Image img = new Image()
-        //    {
-        //        FileCreationDate = date,
-        //        FileName = link
-        //    };
-        //    return img;
-        //}
-
-        //public IList<Image> GetImages()
-        //{
-        //    List<Image> result = new List<Image>();
-
-        //    using (SqlConnection databaseConnection = new SqlConnection(ConnString))
-        //    {
-        //        databaseConnection.Open();
-
-        //        using (
-        //            SqlCommand getCommand =
-        //                new SqlCommand("Select * from Images", databaseConnection))
-        //        {
-        //            using (SqlDataReader reader = getCommand.ExecuteReader())
-        //            {
-        //                if (reader.HasRows)
-        //                {
-        //                    while (reader.Read())
-        //                    {
-        //                        Image img1 = ReadImage(reader);
-        //                        result.Add(img1);
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return result;
-        //}
     }
 }
