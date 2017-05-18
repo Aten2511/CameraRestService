@@ -72,69 +72,78 @@ namespace CameraRestService
         //}
 
 
-        public string AddImage(string input)
+        public bool AddImage(string input)
         {
-            //testmethod
+            bool IsUploadSuccessful = false;
 
-            string outputString = input;
+            string dropboxUrl = input;
+            DateTime creationDateTime = DateTime.Now;
 
-            return outputString;
+            ImageInfo imgMetaData = new ImageInfo(creationDateTime,"","",dropboxUrl);
 
-        }
+            int rowsAffected = StoreDataInDb(imgMetaData);
 
-        /// <summary>
-        /// Uploads file to Dropbox
-        /// </summary>
-        /// <param name="dbx">the dropbox client (DropboxClient)</param>
-        /// <param name="folder">The remote dropbox directory folder path (string)</param>
-        /// <param name="fileName">the name of the file including file extension (string)</param>
-        /// <param name="content">The filedata (Byte array)</param>
-        /// <returns>(string) directorypath/filename and file revision</returns>
-        private static async Task<string> Upload(DropboxClient dbx, string folder, string fileName, byte[] content)
-        {
-            using (var mem = new MemoryStream(content))
+            if (rowsAffected > 0)
             {
-                var updated = await dbx.Files.UploadAsync(
-                    folder + "/" + fileName,
-                    WriteMode.Overwrite.Instance,
-                    body: mem);
-                return $"{folder}/{fileName}, {updated.Rev}";
+                IsUploadSuccessful = true;
             }
+            return IsUploadSuccessful;
+
         }
+
+        ///// <summary>
+        ///// Uploads file to Dropbox
+        ///// </summary>
+        ///// <param name="dbx">the dropbox client (DropboxClient)</param>
+        ///// <param name="folder">The remote dropbox directory folder path (string)</param>
+        ///// <param name="fileName">the name of the file including file extension (string)</param>
+        ///// <param name="content">The filedata (Byte array)</param>
+        ///// <returns>(string) directorypath/filename and file revision</returns>
+        //private static async Task<string> Upload(DropboxClient dbx, string folder, string fileName, byte[] content)
+        //{
+        //    using (var mem = new MemoryStream(content))
+        //    {
+        //        var updated = await dbx.Files.UploadAsync(
+        //            folder + "/" + fileName,
+        //            WriteMode.Overwrite.Instance,
+        //            body: mem);
+        //        return $"{folder}/{fileName}, {updated.Rev}";
+        //    }
+        //}
        
-        /// <summary>
-        /// Get or creates a shared link (url) to a Dropbox file
-        /// </summary>
-        /// <param name="client">Dropbox client</param>
-        /// <param name="remotePath">filename including full directory path</param>
-        /// <returns>Url as string to the shared file</returns>
-        private static async Task<string> GetOrCreateSharedLink(DropboxClient client, string remotePath)
-        {
-            string url = "";
-            try
-            {
-                SharedLinkMetadata meta = await client.Sharing.CreateSharedLinkWithSettingsAsync($"{remotePath}");
-                url = meta.Url;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                try
-                {
-                    ListSharedLinksResult result = await client.Sharing.ListSharedLinksAsync($"{remotePath}");
-                    if (result.Links.Count > 0)
-                    {
-                        url = result.Links[0].Url;
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.Message);
-                    url = "";
-                }
-            }
-            return url;
-        }
+        ///// <summary>
+        ///// Get or creates a shared link (url) to a Dropbox file
+        ///// </summary>
+        ///// <param name="client">Dropbox client</param>
+        ///// <param name="remotePath">filename including full directory path</param>
+        ///// <returns>Url as string to the shared file</returns>
+        //private static async Task<string> GetOrCreateSharedLink(DropboxClient client, string remotePath)
+        //{
+        //    string url = "";
+        //    try
+        //    {
+        //        SharedLinkMetadata meta = await client.Sharing.CreateSharedLinkWithSettingsAsync($"{remotePath}");
+        //        url = meta.Url;
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e.Message);
+        //        try
+        //        {
+        //            ListSharedLinksResult result = await client.Sharing.ListSharedLinksAsync($"{remotePath}");
+        //            if (result.Links.Count > 0)
+        //            {
+        //                url = result.Links[0].Url;
+        //            }
+        //        }
+        //        catch (Exception exception)
+        //        {
+        //            Console.WriteLine(exception.Message);
+        //            url = "";
+        //        }
+        //    }
+        //    return url;
+        //}
         
         /// <summary>
         /// Inserts imageInfo into the database
@@ -158,19 +167,19 @@ namespace CameraRestService
                 }
             }
         }
-        
-        
-        private static Image ReadImage(IDataRecord reader)
-        {
-            DateTime date = reader.GetDateTime(1);
-            string link = reader.GetString(2);
-            Image img = new Image()
-            {
-                FileCreationDate = date,
-                FileName = link
-            };
-            return img;
-        }
+
+
+        //private static Image ReadImage(IDataRecord reader)
+        //{
+        //    DateTime date = reader.GetDateTime(1);
+        //    string link = reader.GetString(2);
+        //    Image img = new Image()
+        //    {
+        //        FileCreationDate = date,
+        //        FileName = link
+        //    };
+        //    return img;
+        //}
 
         //public IList<Image> GetImages()
         //{
