@@ -27,107 +27,10 @@ namespace CameraRestService
         private const string ConnString =
             "Server=tcp:norbi-server.database.windows.net,1433;Initial Catalog=3SemFinal-DB;Persist Security Info=False;User ID=shadowzone88;Password=Russel888988;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
 
-        //public int AddImage(Image img)
-        //{
-        //    #region return data testcode
-
-        //    int dbRowsAffected = 0;
-
-        //    TODO test if upload was a success before storing in database
-        //    bool uploadToDbSuccess = false;
-
-        //    #endregion
-
-        //    //Uploads the data to Dropbox and writes the dropbox path
-        //    using (DropboxClient client = new DropboxClient(TokenString))
-        //    {
-
-        //        string returnString = Upload(client, DropboxFolder, img.FileName, img.Data).Result;
-        //        string remotePath = $"{DropboxFolder}/{img.FileName}";
-
-        //        //string variable for shared link url
-        //        string url = "";
-
-        //        //Tries to get a sharedlink (url as string)
-        //        //Fails if link has already been created
-        //        try
-        //        {
-        //            url = GetOrCreateSharedLink(client, remotePath).Result;
-        //            Console.WriteLine($"{returnString}, URL: {url}");
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Console.WriteLine(e.Message);
-        //        }
-
-        //        //Creates object that holds the metadata that needs to be stored in the db
-        //        ImageInfo imgMeta = new ImageInfo(img.FileCreationDate, DropboxFolder, img.FileName, url);
-
-        //        //TODO store ImageInfo in db
-        //        dbRowsAffected = StoreDataInDb(imgMeta);
-        //    }
-
-        //    return dbRowsAffected;
-
-        //}
-
-
-        public bool AddImage(string input)
-        {
-            bool IsUploadSuccessful = false;
-
-            string dropboxUrl = input;
-            DateTime creationDateTime = DateTime.Now;
-
-            ImageInfo imgMetaData = new ImageInfo(creationDateTime,"","",dropboxUrl);
-
-            int rowsAffected = StoreDataInDb(imgMetaData);
-
-            if (rowsAffected > 0)
-            {
-                IsUploadSuccessful = true;
-            }
-            return IsUploadSuccessful;
-
-        }
-
-        
         /// <summary>
-        /// Inserts imageInfo into the database
+        /// Gets all image data from database
         /// </summary>
-        /// <param name="imgMeta"></param>
-        /// <returns></returns>
-        private static int StoreDataInDb(ImageInfo imgMeta)
-        {
-            using (SqlConnection databaseConnection = new SqlConnection(ConnString))
-            {
-                databaseConnection.Open();
-
-                using (
-                    SqlCommand insertCommand =
-                        new SqlCommand("insert into Images (Datetime,Link) values (@fileCreationDate, @sharedLink)", databaseConnection))
-                {
-                    insertCommand.Parameters.AddWithValue("@fileCreationDate", imgMeta.FileCreationDate);
-                    insertCommand.Parameters.AddWithValue("@sharedLink", imgMeta.SharedLink);
-                    int rowsAffected = insertCommand.ExecuteNonQuery();
-                    return rowsAffected;
-                }
-            }
-        }
-
-
-        private static ImageInfo ReadImage(IDataRecord reader)
-        {
-            DateTime date = reader.GetDateTime(1);
-            string link = reader.GetString(2);
-            ImageInfo img = new ImageInfo()
-            {
-                FileCreationDate = date,
-                FileName = link
-            };
-            return img;
-        }
-
+        /// <returns>List of ImageInfo - CreationDateTime and DropBoxUrl</returns>
         public IList<ImageInfo> GetImages()
         {
             List<ImageInfo> result = new List<ImageInfo>();
@@ -155,5 +58,71 @@ namespace CameraRestService
             }
             return result;
         }
+
+        /// <summary>
+        /// takes a string input DropBox Url, creates an uploadDate and stores it in the database
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public bool PostImage(string input)
+        {
+            bool IsUploadSuccessful = false;
+
+            string dropboxUrl = input;
+            DateTime creationDateTime = DateTime.Now;
+
+            ImageInfo imgMetaData = new ImageInfo(creationDateTime, "", "", dropboxUrl);
+
+            int rowsAffected = StoreDataInDb(imgMetaData);
+
+            if (rowsAffected > 0)
+            {
+                IsUploadSuccessful = true;
+            }
+            return IsUploadSuccessful;
+
+        }
+        
+        /// <summary>
+        /// Reads returned data from database and puts the values in an ImageInfo object
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <returns>ImageInfo object - CreationDate and DropBoxUrl</returns>
+        private static ImageInfo ReadImage(IDataRecord reader)
+        {
+            DateTime date = reader.GetDateTime(1);
+            string link = reader.GetString(2);
+            ImageInfo img = new ImageInfo()
+            {
+                FileCreationDate = date,
+                FileName = link
+            };
+            return img;
+        }
+
+        /// <summary>
+        /// Inserts imageInfo into the database
+        /// </summary>
+        /// <param name="imgMeta"></param>
+        /// <returns></returns>
+        private static int StoreDataInDb(ImageInfo imgMeta)
+        {
+            using (SqlConnection databaseConnection = new SqlConnection(ConnString))
+            {
+                databaseConnection.Open();
+
+                using (
+                    SqlCommand insertCommand =
+                        new SqlCommand("insert into Images (Datetime,Link) values (@fileCreationDate, @sharedLink)", databaseConnection))
+                {
+                    insertCommand.Parameters.AddWithValue("@fileCreationDate", imgMeta.FileCreationDate);
+                    insertCommand.Parameters.AddWithValue("@sharedLink", imgMeta.SharedLink);
+                    int rowsAffected = insertCommand.ExecuteNonQuery();
+                    return rowsAffected;
+                }
+            }
+        }
+
+        
     }
 }

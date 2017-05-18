@@ -22,7 +22,7 @@ namespace CameraRestService
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json,
     ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
     UriTemplate = "images/")]
-        bool AddImage(string input);
+        bool PostImage(string input);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
