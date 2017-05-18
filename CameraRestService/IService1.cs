@@ -17,12 +17,6 @@ namespace CameraRestService
     [ServiceContract]
     public interface IService1
     {
-        ////Add image to database
-        //[OperationContract]
-        //[WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json,
-        //    ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
-        //    UriTemplate = "images/")]
-        //int AddImage(Image img);
 
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json,
@@ -30,10 +24,10 @@ namespace CameraRestService
     UriTemplate = "images/")]
         bool AddImage(string input);
 
-        //[OperationContract]
-        //[WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
-        //    UriTemplate = "images/")]
-        //IList<Image> GetImages();
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "images/")]
+        IList<ImageInfo> GetImages();
     }
 
 
