@@ -158,7 +158,7 @@ namespace CameraRestService
 
                 using (
                     SqlCommand insertCommand =
-                        new SqlCommand("insert into Images (FileCreationDate,Link) values (@fileCreationDate, @sharedLink)", databaseConnection))
+                        new SqlCommand("insert into Images (Datetime,Link) values (@fileCreationDate, @sharedLink)", databaseConnection))
                 {
                     insertCommand.Parameters.AddWithValue("@fileCreationDate", imgMeta.FileCreationDate);
                     insertCommand.Parameters.AddWithValue("@sharedLink", imgMeta.SharedLink);
