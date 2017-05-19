@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraRestService", "CameraRestService\CameraRestService.csproj", "{399081CA-D7DC-4FC7-AC67-36BA60530621}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraRestServiceTests", "CameraRestServiceTests\CameraRestServiceTests.csproj", "{3F1C8170-87C1-41B7-B5B0-E39BD458E0D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{399081CA-D7DC-4FC7-AC67-36BA60530621}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{399081CA-D7DC-4FC7-AC67-36BA60530621}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{399081CA-D7DC-4FC7-AC67-36BA60530621}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F1C8170-87C1-41B7-B5B0-E39BD458E0D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F1C8170-87C1-41B7-B5B0-E39BD458E0D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F1C8170-87C1-41B7-B5B0-E39BD458E0D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F1C8170-87C1-41B7-B5B0-E39BD458E0D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

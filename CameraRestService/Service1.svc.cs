@@ -1,19 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
 using CameraRestService.Model;
-using Dropbox.Api;
-using System.Threading.Tasks;
-using System.IO;
-using System.Web;
-using Dropbox.Api.Files;
-using Dropbox.Api.Sharing;
+using CameraRestService.PersistencyFacade;
 
 namespace CameraRestService
 {
@@ -33,31 +21,12 @@ namespace CameraRestService
         /// <returns>List of ImageInfo - CreationDateTime and DropBoxUrl</returns>
         public IList<ImageInfo> GetImages()
         {
-            List<ImageInfo> result = new List<ImageInfo>();
+            List<ImageInfo> result = Facade.GetImagesFromDb(ConnString);
 
-            using (SqlConnection databaseConnection = new SqlConnection(ConnString))
-            {
-                databaseConnection.Open();
-
-                using (
-                    SqlCommand getCommand =
-                        new SqlCommand("Select * from Images", databaseConnection))
-                {
-                    using (SqlDataReader reader = getCommand.ExecuteReader())
-                    {
-                        if (reader.HasRows)
-                        {
-                            while (reader.Read())
-                            {
-                                ImageInfo imgMeta = ReadImage(reader);
-                                result.Add(imgMeta);
-                            }
-                        }
-                    }
-                }
-            }
             return result;
         }
+
+
 
         /// <summary>
         /// takes a string input DropBox Url, creates an uploadDate and stores it in the database
@@ -73,7 +42,7 @@ namespace CameraRestService
 
             ImageInfo imgMetaData = new ImageInfo(creationDateTime, "", "", dropboxUrl);
 
-            int rowsAffected = StoreDataInDb(imgMetaData);
+            int rowsAffected = Facade.StoreDataInDb(ConnString,imgMetaData);
 
             if (rowsAffected > 0)
             {
@@ -82,47 +51,9 @@ namespace CameraRestService
             return IsUploadSuccessful;
 
         }
-        
-        /// <summary>
-        /// Reads returned data from database and puts the values in an ImageInfo object
-        /// </summary>
-        /// <param name="reader"></param>
-        /// <returns>ImageInfo object - CreationDate and DropBoxUrl</returns>
-        private static ImageInfo ReadImage(IDataRecord reader)
-        {
-            DateTime date = reader.GetDateTime(1);
-            string link = reader.GetString(2);
-            ImageInfo img = new ImageInfo()
-            {
-                FileCreationDate = date,
-                FileName = link
-            };
-            return img;
-        }
 
-        /// <summary>
-        /// Inserts imageInfo into the database
-        /// </summary>
-        /// <param name="imgMeta"></param>
-        /// <returns></returns>
-        private static int StoreDataInDb(ImageInfo imgMeta)
-        {
-            using (SqlConnection databaseConnection = new SqlConnection(ConnString))
-            {
-                databaseConnection.Open();
 
-                using (
-                    SqlCommand insertCommand =
-                        new SqlCommand("insert into Images (Datetime,Link) values (@fileCreationDate, @sharedLink)", databaseConnection))
-                {
-                    insertCommand.Parameters.AddWithValue("@fileCreationDate", imgMeta.FileCreationDate);
-                    insertCommand.Parameters.AddWithValue("@sharedLink", imgMeta.SharedLink);
-                    int rowsAffected = insertCommand.ExecuteNonQuery();
-                    return rowsAffected;
-                }
-            }
-        }
 
-        
+
     }
 }
