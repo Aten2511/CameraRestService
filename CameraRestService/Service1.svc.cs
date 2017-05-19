@@ -1,19 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
 using CameraRestService.Model;
-using Dropbox.Api;
-using System.Threading.Tasks;
-using System.IO;
-using System.Web;
-using Dropbox.Api.Files;
-using Dropbox.Api.Sharing;
+using CameraRestService.PersistencyFacade;
 
 namespace CameraRestService
 {
@@ -27,142 +15,44 @@ namespace CameraRestService
         private const string ConnString =
             "Server=tcp:norbi-server.database.windows.net,1433;Initial Catalog=3SemFinal-DB;Persist Security Info=False;User ID=shadowzone88;Password=Russel888988;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30";
 
-        public int AddImage(Image img)
+        /// <summary>
+        /// Gets all image data from database
+        /// </summary>
+        /// <returns>List of ImageInfo - CreationDateTime and DropBoxUrl</returns>
+        public IList<ImageInfo> GetImages()
         {
-            #region return data testcode
+            List<ImageInfo> result = Facade.GetImagesFromDb(ConnString);
 
-            int dbRowsAffected = 0;
-
-            //TODO test if upload was a success before storing in database
-            bool uploadToDbSuccess = false;
-
-            #endregion
-
-
-            //Uploads the data to Dropbox and writes the dropbox path
-            using (DropboxClient client = new DropboxClient(TokenString))
-            {
-
-                string returnString = Upload(client, DropboxFolder, img.FileName, img.GetDataAsByteArray()).Result;
-                string remotePath = $"{DropboxFolder}/{img.FileName}";
-
-                //string variable for shared link url
-                string url = "";
-
-                //Tries to get a sharedlink (url as string)
-                //Fails if link has already been created
-                try
-                {
-                    url = GetOrCreateSharedLink(client, remotePath).Result;
-                    Console.WriteLine($"{returnString}, URL: {url}");
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-
-                //Creates object that holds the metadata that needs to be stored in the db
-                ImageInfo imgMeta = new ImageInfo(img.FileCreationDate, DropboxFolder, img.FileName, url);
-
-                //TODO store ImageInfo in db
-                dbRowsAffected = StoreDataInDb(imgMeta);
-            }
-
-            return dbRowsAffected;
-
+            return result;
         }
 
+
+
         /// <summary>
-        /// Test method for Post request. Takes a string as input
+        /// takes a string input DropBox Url, creates an uploadDate and stores it in the database
         /// </summary>
-        /// <param name="input">Text string</param>
+        /// <param name="input"></param>
         /// <returns></returns>
-        public string AddString(string input)
+        public bool PostImage(string input)
         {
-            //testmethod
+            bool IsUploadSuccessful = false;
 
-            string outputString = input;
+            string dropboxUrl = input;
+            DateTime creationDateTime = DateTime.Now;
 
-            return outputString;
+            ImageInfo imgMetaData = new ImageInfo(creationDateTime, "", "", dropboxUrl);
+
+            int rowsAffected = Facade.StoreDataInDb(ConnString,imgMetaData);
+
+            if (rowsAffected > 0)
+            {
+                IsUploadSuccessful = true;
+            }
+            return IsUploadSuccessful;
 
         }
 
-        /// <summary>
-        /// Uploads file to Dropbox
-        /// </summary>
-        /// <param name="dbx">the dropbox client (DropboxClient)</param>
-        /// <param name="folder">The remote dropbox directory folder path (string)</param>
-        /// <param name="fileName">the name of the file including file extension (string)</param>
-        /// <param name="content">The filedata (Byte array)</param>
-        /// <returns>(string) directorypath/filename and file revision</returns>
-        private static async Task<string> Upload(DropboxClient dbx, string folder, string fileName, byte[] content)
-        {
-            using (var mem = new MemoryStream(content))
-            {
-                var updated = await dbx.Files.UploadAsync(
-                    folder + "/" + fileName,
-                    WriteMode.Overwrite.Instance,
-                    body: mem);
-                return $"{folder}/{fileName}, {updated.Rev}";
-            }
-        }
 
-        /// <summary>
-        /// Get or creates a shared link (url) to a Dropbox file
-        /// </summary>
-        /// <param name="client">Dropbox client</param>
-        /// <param name="remotePath">filename including full directory path</param>
-        /// <returns>Url as string to the shared file</returns>
-        private static async Task<string> GetOrCreateSharedLink(DropboxClient client, string remotePath)
-        {
-            string url = "";
-            try
-            {
-                SharedLinkMetadata meta = await client.Sharing.CreateSharedLinkWithSettingsAsync($"{remotePath}");
-                url = meta.Url;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                try
-                {
-                    ListSharedLinksResult result = await client.Sharing.ListSharedLinksAsync($"{remotePath}");
-                    if (result.Links.Count > 0)
-                    {
-                        url = result.Links[0].Url;
-                    }
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.Message);
-                    url = "";
-                }
-            }
-            return url;
-        }
-
-        /// <summary>
-        /// Inserts imageInfo into the database
-        /// </summary>
-        /// <param name="imgMeta"></param>
-        /// <returns></returns>
-        private static int StoreDataInDb(ImageInfo imgMeta)
-        {
-            using (SqlConnection databaseConnection = new SqlConnection(ConnString))
-            {
-                databaseConnection.Open();
-
-                using (
-                    SqlCommand insertCommand =
-                        new SqlCommand("insert into Images (DateTime,Link) values (@fileCreationDate, @sharedLink)", databaseConnection))
-                {
-                    insertCommand.Parameters.AddWithValue("@fileCreationDate", imgMeta.FileCreationDate);
-                    insertCommand.Parameters.AddWithValue("@sharedLink", imgMeta.SharedLink);
-                    int rowsAffected = insertCommand.ExecuteNonQuery();
-                    return rowsAffected;
-                }
-            }
-        }
 
 
     }
